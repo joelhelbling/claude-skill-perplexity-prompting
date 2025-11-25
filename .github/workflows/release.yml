@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Generate version
         id: version
@@ -21,6 +23,25 @@ jobs:
           VERSION=$(date +'%Y.%m.%d.%H%M')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Generated version: $VERSION"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the previous release tag, if any
+          PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$PREV_TAG" ]; then
+            echo "No previous tag found, including all commits"
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --reverse)
+          else
+            echo "Previous tag: $PREV_TAG"
+            CHANGELOG=$(git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --reverse)
+          fi
+
+          # Handle multi-line output for GitHub Actions
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create skill package
         run: |
@@ -37,23 +58,24 @@ jobs:
           body: |
             ## Perplexity Prompting Skill
 
-            This release contains the Claude skill for effective Perplexity MCP tool usage.
+            A Claude skill that teaches effective use of Perplexity MCP tools for internet-native research with 8 key prompting strategies.
+
+            ### Changes in this Release
+
+            ${{ steps.changelog.outputs.changelog }}
 
             ### Installation
 
             **Claude Desktop:**
-            1. Download the `perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip` file
+            1. Download `perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip` below
             2. Open Claude Desktop → **Settings** → **Capabilities**
             3. Upload the zip file to add the skill
 
-            **Manual Installation:**
-            1. Download and extract the zip file
-            2. Copy the `perplexity_prompting` folder to your `.claude/skills/` directory
+            **Manual:** Extract the zip and copy `perplexity_prompting/` to your `.claude/skills/` directory.
 
-            ### What's Included
+            ### About This Skill
 
-            - Skill.md - The skill definition teaching 8 key Perplexity prompting strategies
-            - Covers `perplexity_ask`, `perplexity_research`, `perplexity_reason`, and `perplexity_search` tools
+            Teaches effective prompting for `perplexity_ask`, `perplexity_research`, `perplexity_reason`, and `perplexity_search` tools. See the [README](../../blob/main/README.md) for full details.
           files: |
             perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip
           draft: false
