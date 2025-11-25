@@ -52,6 +52,8 @@ jobs:
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ steps.version.outputs.version }}
           name: Perplexity Prompting Skill v${{ steps.version.outputs.version }}
