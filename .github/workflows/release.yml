@@ -42,6 +42,13 @@ jobs:
           echo "$CHANGELOG" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Create and push tag
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "v${{ steps.version.outputs.version }}" -m "Release v${{ steps.version.outputs.version }}"
+          git push origin "v${{ steps.version.outputs.version }}"
+
       - name: Create skill package
         run: |
           mkdir -p package/perplexity_prompting
@@ -50,10 +57,13 @@ jobs:
           zip -r ../perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip perplexity_prompting
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ steps.version.outputs.version }}
-          name: Perplexity Prompting Skill v${{ steps.version.outputs.version }}
+          release_name: Perplexity Prompting Skill v${{ steps.version.outputs.version }}
           body: |
             ## Perplexity Prompting Skill
 
@@ -75,7 +85,15 @@ jobs:
             ### About This Skill
 
             Teaches effective prompting for `perplexity_ask`, `perplexity_research`, `perplexity_reason`, and `perplexity_search` tools. See the [README](../../blob/main/README.md) for full details.
-          files: |
-            perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip
           draft: false
           prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip
+          asset_name: perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip
+          asset_content_type: application/zip
