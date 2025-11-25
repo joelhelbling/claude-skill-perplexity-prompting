@@ -1,0 +1,60 @@
+name: Release Claude Skill
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate version
+        id: version
+        run: |
+          VERSION=$(date +'%Y.%m.%d.%H%M')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Generated version: $VERSION"
+
+      - name: Create skill package
+        run: |
+          mkdir -p package/perplexity_prompting
+          cp .claude/skills/perplexity_prompting/SKILL.md package/perplexity_prompting/Skill.md
+          cd package
+          zip -r ../perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip perplexity_prompting
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Perplexity Prompting Skill v${{ steps.version.outputs.version }}
+          body: |
+            ## Perplexity Prompting Skill
+
+            This release contains the Claude skill for effective Perplexity MCP tool usage.
+
+            ### Installation
+
+            **Claude Desktop:**
+            1. Download the `perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip` file
+            2. Open Claude Desktop → **Settings** → **Capabilities**
+            3. Upload the zip file to add the skill
+
+            **Manual Installation:**
+            1. Download and extract the zip file
+            2. Copy the `perplexity_prompting` folder to your `.claude/skills/` directory
+
+            ### What's Included
+
+            - Skill.md - The skill definition teaching 8 key Perplexity prompting strategies
+            - Covers `perplexity_ask`, `perplexity_research`, `perplexity_reason`, and `perplexity_search` tools
+          files: |
+            perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip
+          draft: false
+          prerelease: false

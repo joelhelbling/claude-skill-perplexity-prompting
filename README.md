@@ -28,12 +28,20 @@ You must install the [Perplexity MCP server](https://docs.perplexity.ai/guides/m
 
 ## Installation
 
-1. Clone this repository or copy the skill files
-2. The skill is located at `skills/perplexity_prompting/SKILL.md`
-3. Claude Desktop and Claude Code will automatically discover skills if placed in
-    - a project's `.claude/skills/` directory (for Claude Code)
-    - your `~/.claude/skills/` directory (for both Claude Desktop and Claude Code)
-4. Restart Claude if needed to load the new skill
+### Option 1: Claude Desktop Capabilities (Recommended)
+
+1. Go to the [Releases page](../../releases) and download the latest `perplexity-prompting-skill-*.zip` file
+2. In Claude Desktop, open **Settings** → **Capabilities**
+3. Upload the zip file to add the skill
+4. The skill will be available immediately
+
+### Option 2: Manual Installation
+
+1. Download the latest release zip or clone this repository
+2. Extract or copy the `.claude/skills/perplexity_prompting/` directory to:
+   - **For a specific project:** Your project's `.claude/skills/` directory (for Claude Code)
+   - **For global use:** Your `~/.claude/skills/` directory (works with both Claude Desktop and Claude Code)
+3. Restart Claude if needed to load the new skill
 
 ## Usage
 
