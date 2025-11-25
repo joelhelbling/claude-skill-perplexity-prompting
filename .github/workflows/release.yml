@@ -57,13 +57,10 @@ jobs:
           zip -r ../perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip perplexity_prompting
 
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
-          release_name: Perplexity Prompting Skill v${{ steps.version.outputs.version }}
+          name: Perplexity Prompting Skill v${{ steps.version.outputs.version }}
           body: |
             ## Perplexity Prompting Skill
 
@@ -87,13 +84,5 @@ jobs:
             Teaches effective prompting for `perplexity_ask`, `perplexity_research`, `perplexity_reason`, and `perplexity_search` tools. See the [README](../../blob/main/README.md) for full details.
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip
-          asset_name: perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip
-          asset_content_type: application/zip
+          files: |
+            perplexity-prompting-skill-${{ steps.version.outputs.version }}.zip
