@@ -1,4 +1,5 @@
 # Perplexity MCP Server
+_This mess of a markdown is mainly here for Claude Code's benefit.  There's a much better human-readable version [here](https://docs.perplexity.ai/guides/mcp-server)._
 
 > Connect AI assistants to Perplexity's search and reasoning capabilities using the Model Context Protocol (MCP).
 
