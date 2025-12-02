@@ -120,6 +120,34 @@ Here's my recommended query: 'Compare AI coding tool alternatives to GitHub Copi
 
 This approach uses Strategy #1 (context), Strategy #3 (exact dates), and Strategy #4 (multiple perspectives). Does this capture what you're looking for?"
 
+## CRITICAL: Always Report Citations
+
+**You MUST always preserve and display citations from Perplexity responses.** This is non-negotiable.
+
+When Perplexity returns results:
+
+1. **Never summarize away the citations** - Always include the source URLs and references that Perplexity provides
+2. **Present citations clearly** - Format them in a "Sources:" section at the end of your response
+3. **Include all relevant citations** - Don't cherry-pick; include every citation that supports the information you're presenting
+4. **Preserve citation context** - When Perplexity attributes specific claims to specific sources, maintain that attribution
+
+**Example output format:**
+
+```
+[Your synthesized answer based on Perplexity results]
+
+Sources:
+- [Source Title 1](https://example.com/article1)
+- [Source Title 2](https://example.com/article2)
+- [Source Title 3](https://example.com/article3)
+```
+
+**Why this matters:**
+- Citations are Perplexity's core value proposition - sourced, verifiable information
+- Users need citations to verify claims and do further research
+- Removing citations defeats the purpose of using Perplexity over other tools
+- The user explicitly chose Perplexity because they want transparent, accountable answers
+
 ## Available Tools
 
 You have access to four Perplexity MCP tools:
